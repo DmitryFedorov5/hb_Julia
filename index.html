@@ -19,8 +19,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            /* Изменено: разрешаем вертикальный скролл, если контент не влезает (актуально для смартфонов в ТГ) */
+            overflow-x: hidden;
+            overflow-y: auto;
             position: relative;
+            padding: 20px 10px; /* Отступы сверху и снизу, чтобы контент не прилипал к краям экрана при скролле */
         }
 
         /* Экран 1: Игра с кнопкой */
@@ -83,15 +86,18 @@
         #congrats-screen {
             display: none;
             text-align: center;
+            width: 100%;
             max-width: 600px;
-            padding: 30px;
+            padding: 30px 20px;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Поддержка для старых iOS */
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             animation: fadeIn 1s ease forwards;
             z-index: 20;
+            margin: auto; /* Помогает корректно позиционировать блок при длинном скролле */
         }
 
         @keyframes fadeIn {
@@ -110,7 +116,7 @@
         }
 
         .congrats-title {
-            font-size: 3rem;
+            font-size: 2.8rem;
             background: linear-gradient(45deg, #f8ff00, #3ad7ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -118,7 +124,7 @@
         }
 
         .congrats-text {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             line-height: 1.6;
             color: #e0e0f0;
             white-space: pre-line;
@@ -126,7 +132,7 @@
 
         /* Холст для салюта/конфетти */
         #canvas {
-            position: absolute;
+            position: fixed; /* Изменено с absolute на fixed, чтобы салют не уезжал при скролле страницы вниз */
             top: 0;
             left: 0;
             width: 100%;
@@ -149,7 +155,7 @@
     <div id="congrats-screen">
         <h2 class="congrats-title">Ура, ты поймала! 🎉</h2>
         
-        <img src="index.jpg" alt="Поздравление" class="gift-image" onerror="this.src='https://placehold.co/600x400/2a2a40/ffffff?text=%D0%A2%D0%B2%D0%BE%D1%91+%D0%A4%D0%BE%D1%82%D0%BE/+%D0%9K%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BA%D0%B0'">
+        <img src="index.jpg" alt="Поздравление" class="gift-image">
         
         <p class="congrats-text">
             Дорогая Юля, поздравляю тебя с 33-летием.
@@ -172,7 +178,7 @@
         const ctx = canvas.getContext('2d');
 
         let attempts = 0;
-        const maxAttempts = 9; // Количество убеганий (6 раз убежит, на 7-й откроется автоматически)
+        const maxAttempts = 9; 
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
